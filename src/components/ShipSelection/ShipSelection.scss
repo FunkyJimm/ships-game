@@ -1,0 +1,37 @@
+.game-arena {
+  background: #101010;
+  color: #fff;
+  width: 80vh;
+  height: 80vh;
+  display: flex;
+  flex-flow: row nowrap;
+
+  &__row {
+
+
+    &-ceil {
+      background: #606060;
+      border: 1px solid #fff;
+      width: 8vh;
+      height: 8vh;
+      display: flex;
+      justify-content: center;
+
+      &--miss {
+        background-color: #909090;
+      }
+
+      &--ship-available {
+        background-color: green;
+      }
+
+      &--ship-destroyed {
+        background-color: red;
+      }
+
+      p {
+        align-self: center;
+      }
+    }
+  }
+}
