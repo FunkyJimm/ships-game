@@ -1,26 +1,22 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import './ShipSelection.scss';
 
-const ARENA_SIZE = 10;
-
-const ARENA = [
-                    ['.', '.', '.', '.', '.', '.', '.', '.', '.', '.'],
-                    ['.', '.', '.', '.', '.', '.', '.', '.', '.', '.'],
-                    ['.', '.', '.', '.', '.', '.', '.', '.', '.', '.'],
-                    ['.', '.', '.', '.', '.', '.', '.', '.', '.', '.'],
-                    ['.', '.', '.', '.', '.', '.', '.', '.', '.', '.'],
-                    ['.', '.', '.', '.', '.', '.', '.', '.', '.', '.'],
-                    ['.', '.', '.', '.', '.', '.', '.', '.', '.', '.'],
-                    ['.', '.', '.', '.', '.', '.', '.', '.', '.', '.'],
-                    ['.', '.', '.', '.', '.', '.', '.', '.', '.', '.'],
-                    ['.', '.', '.', '.', '.', '.', '.', '.', '.', '.']
-                  ];
+import { ARENA, ARENA_SIZE } from '../../options/Options';
 
 const ShipSelection = (props) => {
-  const { shipSizeSelected, shipRotation } = props;
+  const { shipSizeSelected, shipRotation, addShipSelected, shipsReset, chooseConfirm, addNewPlayerArena } = props;
 
-  const [userSelectedArena, setUserSelectedArena] = useState(ARENA);
+  const [userSelectedArena, setUserSelectedArena] = useState([...ARENA]);
+
+  useEffect(() => {
+    const newArena = JSON.parse(JSON.stringify(ARENA));
+    setUserSelectedArena(newArena);
+
+    if (chooseConfirm) {
+      addNewPlayerArena(userSelectedArena);
+    }
+  }, [shipsReset, chooseConfirm]);
 
   const drawArena = () => {
     const arena = [];
@@ -90,33 +86,39 @@ const ShipSelection = (props) => {
 
   const handlePlaceShip = (position) => {
     let freeCeilCounter = 0;
-    const updatedArena = [...userSelectedArena];
+    const updatedArena = JSON.parse(JSON.stringify(userSelectedArena));
 
-    if (shipRotation) {
-      for (let i = 0; i < shipSizeSelected; i++) {
-        if (checkCeilsAround({ x: position.x + i, y: position.y })) {
-          freeCeilCounter++;
-        }
-      }
-      if (freeCeilCounter === shipSizeSelected) {
+    if (position.x + shipSizeSelected <= ARENA_SIZE) {
+      if (shipRotation) {
         for (let i = 0; i < shipSizeSelected; i++) {
-          updatedArena[position.x + i][position.y] = 'S';
+          if (checkCeilsAround({ x: position.x + i, y: position.y })) {
+            freeCeilCounter++;
+          }
         }
-      }
-    } else {
-      for (let i = 0; i < shipSizeSelected; i++) {
-        if (checkCeilsAround({ x: position.x, y: position.y + i })) {
-          freeCeilCounter++;
+        if (freeCeilCounter === shipSizeSelected) {
+          for (let i = 0; i < shipSizeSelected; i++) {
+            updatedArena[position.x + i][position.y] = 'S';
+          }
         }
-      }
-      if (freeCeilCounter === shipSizeSelected) {
+      } else {
         for (let i = 0; i < shipSizeSelected; i++) {
-          updatedArena[position.x][position.y + i] = 'S';
+          if (checkCeilsAround({ x: position.x, y: position.y + i })) {
+            freeCeilCounter++;
+          }
+        }
+        if (freeCeilCounter === shipSizeSelected) {
+          for (let i = 0; i < shipSizeSelected; i++) {
+            updatedArena[position.x][position.y + i] = 'S';
+          }
         }
       }
     }
-    
-    setUserSelectedArena(prev => [...prev, updatedArena]);
+
+    if (freeCeilCounter === shipSizeSelected) {
+      if (addShipSelected(shipSizeSelected)) {
+        setUserSelectedArena(updatedArena);
+      }
+    }
   }
 
   const handlePlaceShipVisualization = (position) => {
