@@ -17,12 +17,8 @@
       display: flex;
       justify-content: center;
 
-      &--miss {
+      &--shot-missing {
         background-color: #909090;
-      }
-
-      &--ship-available {
-        background-color: green;
       }
 
       &--ship-destroyed {

@@ -5,6 +5,7 @@ import ShipsMenu from './components/ShipSelectionMenu/ShipSelectionMenu';
 import ShipSelection from './components/ShipSelection/ShipSelection';
 
 import './App.scss';
+import GameArenaMenu from './components/GameArenaMenu/GameArenaMenu';
 
 function App() {
   const [shipSizeChoosen, setShipSizeChoosen] = useState(null);
@@ -14,6 +15,7 @@ function App() {
   const [chooseConfirm, setChooseConfirm] = useState(false);
   const [newPlayerArena, setNewPlayerArena] = useState(null);
 
+  // Ship selection screen
   const handleChooseShipSize = (shipSize) => {
     setShipSizeChoosen(shipSize);
   }
@@ -35,6 +37,19 @@ function App() {
 
   const addNewPlayerArena = (newPlayerArena) => {
     setNewPlayerArena(newPlayerArena);
+  }
+
+  const [playerPoints, setPlayerPoints] = useState(0);
+  const [playerMisses, setPlayerMisses] = useState(0);
+
+  // Game arena screen
+  const addPlayerPoints = () => {
+    const points = Math.floor(1000 / (playerMisses ? playerMisses : 1));
+    setPlayerPoints(playerPoints + points);
+  }
+
+  const addPlayerMisses = () => {
+    setPlayerMisses(playerMisses + 1);
   }
 
   const addShipSelected = (shipSize) => {
@@ -70,7 +85,7 @@ function App() {
 
   return (
     <main className="container">
-      {!chooseConfirm &&
+      {/* {!chooseConfirm &&
         <>
           <ShipSelection 
             shipSizeSelected={shipSizeChoosen} 
@@ -88,13 +103,9 @@ function App() {
             onChooseConfirm={handleChooseConfirm}
           />
         </>
-      }
-      {/* {newPlayerArena &&
-        <>
-          {console.log("Drugi komponent")}
-          <GameArena />
-        </>
       } */}
+      <GameArena newGameArena={newPlayerArena} addPlayerPoints={addPlayerPoints} addPlayerMisses={addPlayerMisses} />
+      <GameArenaMenu playerPoints={playerPoints} playerMisses={playerMisses} />
     </main>
   );
 }

@@ -163,7 +163,7 @@ const ShipSelection = (props) => {
   }
 
   return (
-    <div className='game-arena'>
+    <div className='ship-selection'>
       {drawArena()}
     </div>
   )
