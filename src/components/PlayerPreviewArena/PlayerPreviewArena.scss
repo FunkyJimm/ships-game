@@ -1,8 +1,8 @@
-.game-arena {
-  background: #101010;
+.player-preview-arena {
+  background: red;
   color: #fff;
-  width: 80vh;
-  height: 80vh;
+  width: 40vh;
+  height: 40vh;
   display: flex;
   flex-flow: row nowrap;
 
@@ -11,8 +11,8 @@
     &-ceil {
       background: #606060;
       border: 1px solid #fff;
-      width: 8vh;
-      height: 8vh;
+      width: 4vh;
+      height: 4vh;
       display: flex;
       justify-content: center;
 

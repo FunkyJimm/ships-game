@@ -17,7 +17,7 @@ const TEMP_ARENA = [
   ['.', 'S', 'S', 'S', '.', '.', '.', '.', '.', 'S']
 ];
 
-const GameArena = ({ newGameArena, addPlayerPoints, addPlayerMisses }) => {
+const GameArena = ({ newGameArena, addPlayerPoints, addPlayerMisses, updatePlayerArena }) => {
   const [gameArena, setGameArena] = useState([...TEMP_ARENA]);
 
   const drawArena = () => {
@@ -65,6 +65,8 @@ const GameArena = ({ newGameArena, addPlayerPoints, addPlayerMisses }) => {
       addPlayerMisses();
       console.log('Pudło!');
     }
+
+    updatePlayerArena(updatedGameArena);
   }
 
   return (

@@ -1,11 +1,12 @@
 import { useState } from 'react';
 
 import GameArena from './components/GameArena/GameArena';
-import ShipsMenu from './components/ShipSelectionMenu/ShipSelectionMenu';
+import GameArenaMenu from './components/GameArenaMenu/GameArenaMenu';
 import ShipSelection from './components/ShipSelection/ShipSelection';
+import ShipSelectionMenu from './components/ShipSelectionMenu/ShipSelectionMenu';
+import PlayerPreviewArena from './components/PlayerPreviewArena/PlayerPreviewArena';
 
 import './App.scss';
-import GameArenaMenu from './components/GameArenaMenu/GameArenaMenu';
 
 function App() {
   const [shipSizeChoosen, setShipSizeChoosen] = useState(null);
@@ -14,6 +15,7 @@ function App() {
   const [shipsReset, setShipsReset] = useState(false);
   const [chooseConfirm, setChooseConfirm] = useState(false);
   const [newPlayerArena, setNewPlayerArena] = useState(null);
+  const [playerArenaRefresh, setPlayerArenaRefresh] = useState(null);
 
   // Ship selection screen
   const handleChooseShipSize = (shipSize) => {
@@ -37,6 +39,10 @@ function App() {
 
   const addNewPlayerArena = (newPlayerArena) => {
     setNewPlayerArena(newPlayerArena);
+  }
+
+  const updatePlayerArena = (playerArena) => {
+    setPlayerArenaRefresh(playerArena);
   }
 
   const [playerPoints, setPlayerPoints] = useState(0);
@@ -104,8 +110,9 @@ function App() {
           />
         </>
       } */}
-      <GameArena newGameArena={newPlayerArena} addPlayerPoints={addPlayerPoints} addPlayerMisses={addPlayerMisses} />
+      <GameArena newGameArena={newPlayerArena} addPlayerPoints={addPlayerPoints} addPlayerMisses={addPlayerMisses} updatePlayerArena={updatePlayerArena} />
       <GameArenaMenu playerPoints={playerPoints} playerMisses={playerMisses} />
+      <PlayerPreviewArena playerArena={playerArenaRefresh} />
     </main>
   );
 }
