@@ -1,4 +1,4 @@
-.ship-selection {
+.ships-selection-screen {
   background: #101010;
   color: #fff;
   width: 80vh;
@@ -8,7 +8,6 @@
 
   &__row {
 
-
     &-ceil {
       background: #606060;
       border: 1px solid #fff;
@@ -17,21 +16,21 @@
       display: flex;
       justify-content: center;
 
-      &--miss {
-        background-color: #909090;
-      }
-
-      &--ship-available {
+      &--ship-placed {
         background-color: green;
-      }
-
-      &--ship-destroyed {
-        background-color: red;
       }
 
       p {
         align-self: center;
       }
     }
+  }
+}
+
+.ships-selection-menu {
+  button {
+    cursor: pointer;
+    width: 100px;
+    height: 60px;
   }
 }

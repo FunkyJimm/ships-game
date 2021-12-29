@@ -1,8 +1,6 @@
 import { useState } from 'react';
 
-import './GameArena.scss';
-
-import { ARENA, ARENA_SIZE } from '../../options/Options';
+import { ARENA, ARENA_SIZE } from '../../../options/Options';
 
 const TEMP_ARENA = [
   ['S', '.', '.', '.', '.', '.', 'S', '.', '.', '.'],
@@ -17,7 +15,7 @@ const TEMP_ARENA = [
   ['.', 'S', 'S', 'S', '.', '.', '.', '.', '.', 'S']
 ];
 
-const GameArena = ({ newGameArena, addPlayerPoints, addPlayerMisses, updatePlayerArena }) => {
+const GameArena = ({ addPlayerPoints, addPlayerMisses, changePlayerTurn }) => {
   const [gameArena, setGameArena] = useState([...TEMP_ARENA]);
 
   const drawArena = () => {
@@ -27,14 +25,14 @@ const GameArena = ({ newGameArena, addPlayerPoints, addPlayerMisses, updatePlaye
       const ceils = [];
   
       for (let x = 0; x < ARENA_SIZE; x++) {
-        let ceilClass = 'game-arena__row-ceil';
+        let ceilClass = 'enemy-arena__row-ceil';
         const ceilName = `${x},${y}`;
         const position = { x, y };
 
         if (gameArena[x][y] === 'O') {
-          ceilClass += ' game-arena__row-ceil--shot-missing';
+          ceilClass += ' enemy-arena__row-ceil--shot-missing';
         } else if (gameArena[x][y] === 'X') {
-          ceilClass += ' game-arena__row-ceil--ship-destroyed';
+          ceilClass += ' enemy-arena__row-ceil--ship-destroyed';
         }
 
         const ceil = <div key={ceilName} id={ceilName} className={ceilClass} 
@@ -44,7 +42,7 @@ const GameArena = ({ newGameArena, addPlayerPoints, addPlayerMisses, updatePlaye
         ceils.push(ceil);
       }
   
-      const row = <div key={y} className='game-arena__row'>{ceils}</div>
+      const row = <div key={y} className='enemy-arena__row'>{ceils}</div>
       arena.push(row);
     }
   
@@ -58,19 +56,20 @@ const GameArena = ({ newGameArena, addPlayerPoints, addPlayerMisses, updatePlaye
       updatedGameArena[x][y] = 'X';
       setGameArena(updatedGameArena);
       addPlayerPoints();
+      changePlayerTurn();
       console.log('Zestrzelony!');
     } else if (gameArena[x][y] === '.') {
       updatedGameArena[x][y] = 'O';
       setGameArena(updatedGameArena);
       addPlayerMisses();
+      changePlayerTurn();
       console.log('Pudło!');
     }
 
-    updatePlayerArena(updatedGameArena);
   }
 
   return (
-    <div className="game-arena">
+    <div className="enemy-arena">
       {drawArena()}
     </div>
   )

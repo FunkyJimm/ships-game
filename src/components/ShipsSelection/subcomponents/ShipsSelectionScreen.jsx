@@ -1,11 +1,9 @@
 import { useEffect, useState } from 'react';
 
-import './ShipSelection.scss';
+import { ARENA, ARENA_SIZE } from '../../../options/Options';
 
-import { ARENA, ARENA_SIZE } from '../../options/Options';
-
-const ShipSelection = (props) => {
-  const { shipSizeSelected, shipRotation, addShipSelected, shipsReset, chooseConfirm, addNewPlayerArena } = props;
+const ShipsSelectionScreen = (props) => {
+  const { shipSize, shipRotation, addShipsSelected, shipsReset, shipsConfirm, addNewPlayerArena } = props;
 
   const [userSelectedArena, setUserSelectedArena] = useState([...ARENA]);
 
@@ -13,10 +11,10 @@ const ShipSelection = (props) => {
     const newArena = JSON.parse(JSON.stringify(ARENA));
     setUserSelectedArena(newArena);
 
-    if (chooseConfirm) {
+    if (shipsConfirm) {
       addNewPlayerArena(userSelectedArena);
     }
-  }, [shipsReset, chooseConfirm]);
+  }, [shipsReset, shipsConfirm]);
 
   const drawArena = () => {
     const arena = [];
@@ -25,12 +23,12 @@ const ShipSelection = (props) => {
       const ceils = [];
   
       for (let x = 0; x < ARENA_SIZE; x++) {
-        let ceilClass = 'game-arena__row-ceil';
+        let ceilClass = ' ships-selection-screen__row-ceil';
         const ceilName = `${x},${y}`;
         const position = { x, y };
 
         if (userSelectedArena[x][y] === 'S') {
-          ceilClass += ' game-arena__row-ceil--ship-available';
+          ceilClass += ' ships-selection-screen__row-ceil--ship-placed';
         }
 
         const ceil = <div key={ceilName} id={ceilName} className={ceilClass} 
@@ -42,7 +40,7 @@ const ShipSelection = (props) => {
         ceils.push(ceil);
       }
   
-      const row = <div key={y} className='game-arena__row'>{ceils}</div>
+      const row = <div key={y} className='ships-selection-screen__row'>{ceils}</div>
       arena.push(row);
     }
   
@@ -54,13 +52,14 @@ const ShipSelection = (props) => {
 
     for (let x of conditionArray) {
       for (let y of conditionArray) {
-        let posX = position.x + x > 0 && position.x + x < ARENA_SIZE ? x : 0;
-        let posY = position.y + y > 0 && position.y + y < ARENA_SIZE ? y : 0;
+        let posX = position.x + x >= 0 && position.x + x < ARENA_SIZE ? x : 0;
+        let posY = position.y + y >= 0 && position.y + y < ARENA_SIZE ? y : 0;
 
         if (userSelectedArena[position.x + posX][position.y + posY] !== '.') {
           wrongCeilPositionVizualization(position);
           return false;
         }
+        console.log("DUPA")
       }
     }
 
@@ -72,8 +71,8 @@ const ShipSelection = (props) => {
 
     for (let x of conditionArray) {
       for (let y of conditionArray) {
-        let posX = position.x + x > 0 && position.x + x < ARENA_SIZE ? x : 0;
-        let posY = position.y + y > 0 && position.y + y < ARENA_SIZE ? y : 0;
+        let posX = position.x + x >= 0 && position.x + x < ARENA_SIZE ? x : 0;
+        let posY = position.y + y >= 0 && position.y + y < ARENA_SIZE ? y : 0;
 
         const ceil = document.getElementById(`${position.x + posX},${position.y + posY}`);
 
@@ -86,36 +85,41 @@ const ShipSelection = (props) => {
 
   const handlePlaceShip = (position) => {
     let freeCeilCounter = 0;
+    const shipPosition = [];
     const updatedArena = JSON.parse(JSON.stringify(userSelectedArena));
 
-    if (position.x + shipSizeSelected <= ARENA_SIZE) {
-      if (shipRotation) {
-        for (let i = 0; i < shipSizeSelected; i++) {
+    if(shipRotation) {
+      if (position.x + shipSize <= ARENA_SIZE) {
+        for (let i = 0; i < shipSize; i++) {
           if (checkCeilsAround({ x: position.x + i, y: position.y })) {
             freeCeilCounter++;
           }
         }
-        if (freeCeilCounter === shipSizeSelected) {
-          for (let i = 0; i < shipSizeSelected; i++) {
+        if (freeCeilCounter === shipSize) {
+          for (let i = 0; i < shipSize; i++) {
             updatedArena[position.x + i][position.y] = 'S';
+            shipPosition.push(position.x + i, position.y);
           }
         }
-      } else {
-        for (let i = 0; i < shipSizeSelected; i++) {
+      }
+    } else {
+      if (position.y + shipSize <= ARENA_SIZE) {
+        for (let i = 0; i < shipSize; i++) {
           if (checkCeilsAround({ x: position.x, y: position.y + i })) {
             freeCeilCounter++;
           }
         }
-        if (freeCeilCounter === shipSizeSelected) {
-          for (let i = 0; i < shipSizeSelected; i++) {
+        if (freeCeilCounter === shipSize) {
+          for (let i = 0; i < shipSize; i++) {
             updatedArena[position.x][position.y + i] = 'S';
+            shipPosition.push(position.x, position.y + i);
           }
         }
       }
     }
 
-    if (freeCeilCounter === shipSizeSelected) {
-      if (addShipSelected(shipSizeSelected)) {
+    if (freeCeilCounter === shipSize) {
+      if (addShipsSelected(shipSize, shipPosition)) {
         setUserSelectedArena(updatedArena);
       }
     }
@@ -125,7 +129,7 @@ const ShipSelection = (props) => {
     const shipArea = [];
     let ceilColor = 'green';
 
-    for (let i = 0; i < shipSizeSelected; i++) {
+    for (let i = 0; i < shipSize; i++) {
       let ceil;
 
       if (shipRotation) {
@@ -153,7 +157,7 @@ const ShipSelection = (props) => {
   }
 
   const handleResetVisualization = () => {
-    const ceils = document.querySelectorAll('.game-arena__row-ceil');
+    const ceils = document.querySelectorAll('.ships-selection-screen__row-ceil');
     for (const ceil of ceils) { 
       if (ceil) {
         ceil.style.backgroundColor = '';
@@ -163,10 +167,10 @@ const ShipSelection = (props) => {
   }
 
   return (
-    <div className='ship-selection'>
+    <div className='ships-selection-screen'>
       {drawArena()}
     </div>
   )
 }
 
-export default ShipSelection;
+export default ShipsSelectionScreen;
