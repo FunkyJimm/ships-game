@@ -16,8 +16,18 @@ const MainMenu = () => {
 
   return (
     <div className="main-menu">
-      { !newPlayerArena && <ShipsSelection createNewGame={createNewGame} /> }
-      { newPlayerArena && <Game playerArenaTemplate={newPlayerArena} shipsPositions={shipsPositions} /> }
+      <h1>Ships</h1>
+      <div className="main-menu__options">
+        <button>Nowa gra</button>
+        <button>Ranking</button>
+        <button>Pomoc</button>
+        <button>O autorach</button>
+      </div>
+      <div className="main-menu__footer">
+        <p>Copyright by FunkyJimm 2021. All rights reserved.</p>
+      </div>
+      {/* { !newPlayerArena && <ShipsSelection createNewGame={createNewGame} /> }
+      { newPlayerArena && <Game playerArenaTemplate={newPlayerArena} shipsPositions={shipsPositions} /> } */}
     </div>
   )
 }

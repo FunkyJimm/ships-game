@@ -1,3 +1,38 @@
+.container {
+  justify-content: center;
+}
+
 .main-menu {
+  height: 100vh;
   display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+
+  &__options {
+    height: 50vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+
+    button {
+      width: 20vw;
+      height: 5vw;
+    }
+  }
+
+  h1 {
+    color: #fff;
+    font-size: 72px;
+    text-align: center;
+  }
+
+  &__footer {
+    align-self: center;
+
+    p {
+      color: #fff;
+      font-size: 24px;
+    }
+  }
 }
